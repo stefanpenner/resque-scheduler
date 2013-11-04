@@ -313,8 +313,10 @@ module Resque
         @shutdown = true
 
         if @sleeping
-          Resque.clean_schedules
-          Thread.new { release_master_lock! }
+          Thread.new {
+            Resque.clean_schedules
+            release_master_lock!
+          }.join
           exit
         end
       end
